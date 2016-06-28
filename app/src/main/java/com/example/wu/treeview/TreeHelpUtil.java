@@ -19,12 +19,13 @@ public class TreeHelpUtil {
     private static <T> List<Node> convertDatas2Nodes(List<T> datas) throws IllegalAccessException {
         List<Node> nodes = new ArrayList<Node>();
         for (T data : datas) {
+            int id = -1;
+            int pId = -1;
+            String level = null;
             Class clazz = data.getClass();
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                int id = -1;
-                int pId = -1;
-                String level = null;
+
                 if (field.getAnnotation(TreeNodeId.class) != null) {
                     field.setAccessible(true);
                     id = field.getInt(data);
@@ -37,10 +38,9 @@ public class TreeHelpUtil {
                     field.setAccessible(true);
                     level = (String) field.get(data);
                 }
-
-                Node node = new Node(id, pId, level);
-                nodes.add(node);
             }
+            Node node = new Node(id, pId, level);
+            nodes.add(node);
         }
         /**
          * 设置节点间的相互关系
